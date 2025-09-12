@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JFCM Taytay File Manager</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* 🌿 GLOBAL STYLES */
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to bottom, #fdfdfb, #f7f3e9);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      color: #222;
+      background-image: url('https://jfcmbinan.com/assets/images/logo-jfcm.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 300px;
+      background-attachment: fixed;
+      opacity: 0.97;
+    }
+
+    /* ✨ HEADER */
+    header {
+      background: #004d00;
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    header .logo {
+      font-family: 'Merriweather', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: white;
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #DAA520;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: white;
+    }
+
+    /* ✨ MAIN CONTAINER */
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 20px;
+      margin-top: 20px;
+    }
+
+    h2 {
+      font-family: 'Merriweather', serif;
+      color: #004d00;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+
+    /* 📦 CARDS */
+    .card {
+      background: rgba(255,255,255,0.96);
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      width: 100%;
+      max-width: 900px;
+      margin: 20px auto;
+      position: relative;
+    }
+
+    .card img.logo {
+      max-width: 100px;
+      margin-bottom: 15px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border-radius: 12px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #004d00;
+      box-shadow: 0 0 5px rgba(0,77,0,0.4);
+    }
+
+    button {
+      background: #004d00;
+      color: white;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #004d00;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+
+    /* 🌿 DRIVE AREA */
+    #foldersContainer {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .folder {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin: 15px 0;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .folder-header {
+      background: #004d00
+
+;
+      color: white;
+      font-weight: 600;
+      padding: 15px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .folder-content {
+      display: none;
+      padding: 15px;
+      background: rgba(255,255,255,0.95);
+    }
+
+    /* 📋 File Toolbar (search + filter) */
+    .file-toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .file-toolbar input, .file-toolbar select {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      flex: 1;
+    }
+
+    /* 📂 File Table */
+    .file-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    .file-table th, .file-table td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+
+    .file-table th {
+      background: #e6f2e6;
+      font-weight: 600;
+      color: #004d00;
+    }
+
+    /* Dashboard header */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .welcome {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #004d00;
+    }
+
+    .datetime {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    footer {
+      background: #004d00;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+
+    /* ✨ MOBILE NAVIGATION */
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+        flex-direction: column;
+        background: #004d00;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        width: 200px;
+        padding: 15px;
+        border-radius: 0 0 0 12px;
+      }
+      nav a {
+        margin: 10px 0;
+        display: block;
+      }
+      .menu-toggle {
+        display: block;
+      }
+      nav.active {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🌿 HEADER -->
+  <header>
+    <a href="/" class="logo">JFCM Taytay</a>
+    <nav id="nav-links">
+      <a href="https://www.facebook.com/jfcm.taytay/">About Us</a>
+      <a href="viber://chat?number=%2B639085764548">Contact Us</a>
+      <a href="https://jfcmkitchen.com/">JFCM Kitchen Link</a>
+    </nav>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+  </header>
+
+  <!-- 🌿 MAIN CONTENT -->
+  <div class="container" id="main-container">
+    
+    <!-- LOGIN CARD -->
+    <div class="card" id="login-box" style="max-width:420px; text-align:center;">
+      <img src="https://jfcmbinan.com/assets/images/logo-jfcm.png" class="logo" alt="JFCM Logo">
+
+      <h2>Welcome to JFCM Taytay</h2>
+      <input type="email" id="email" placeholder="Enter Email">
+      <input type="password" id="password" placeholder="Enter Password">
+      <button onclick="siteLogin()">Login</button>
+      <p class="error" id="error-message"></p>
+    </div>
+
+    <!-- DRIVE DASHBOARD -->
+    <div class="card" id="drive-box" style="display:none;">
+      <div class="dashboard-header">
+        <div class="welcome" id="welcomeMsg">Welcome!</div>
+        <div class="datetime" id="datetime"></div>
+      </div>
+      <h2>JFCM Taytay Mini Kitchen Modules</h2>
+      <div id="foldersContainer"></div>
+    </div>
+
+  </div>
+
+  <!-- 🌿 FOOTER -->
+  <footer>
+    © 2025 Jesus First Christian Ministries - Taytay | All Rights Reserved
+  </footer>
+
+  <!-- 🌿 SCRIPT -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabaseUrl = 'https://ustqtzorwudvspqhqsda.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzdHF0em9yd3VkdnNwcWhxc2RhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mjc1NjUsImV4cCI6MjA3MzAwMzU2NX0.6xDg0MoJDhS_Gtg1TZ-xZ47Ws5nWnqUHEnqTfiAvkVA'; // 🔑 Your Supabase anon key here
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    const bucketName = 'private';
+    const foldersToShow = ['Preaching', 'Simbahay', 'Sow', 'Preaching/Teaching Videos'];
+
+    async function siteLogin() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const { data: { user }, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        document.getElementById('error-message').textContent = 'Login failed: ' + error.message;
+        return;
+      }
+
+      document.getElementById('login-box').style.display = 'none';
+      document.getElementById('drive-box').style.display = 'block';
+      document.getElementById('welcomeMsg').textContent = `Welcome, ${user.email}`;
+
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
+
+      listFolders();
+    }
+
+    function updateDateTime() {
+      const now = new Date();
+      document.getElementById('datetime').textContent = now.toLocaleString();
+    }
+
+    function listFolders() {
+      const container = document.getElementById('foldersContainer');
+      container.innerHTML = '';
+      foldersToShow.forEach(folderName => {
+        createFolderElement(folderName, container);
+      });
+    }
+
+    function createFolderElement(folderPath, parentContainer) {
+      const folderDiv = document.createElement('div');
+      folderDiv.className = 'folder';
+
+      const folderHeader = document.createElement('div');
+      folderHeader.className = 'folder-header';
+      folderHeader.innerHTML = `<span>📁 ${folderPath}</span><span>▼</span>`;
+      folderDiv.appendChild(folderHeader);
+
+      const filesContainer = document.createElement('div');
+      filesContainer.className = 'folder-content';
+      folderDiv.appendChild(filesContainer);
+
+      folderHeader.onclick = () => {
+        const isVisible = filesContainer.style.display === 'block';
+        filesContainer.style.display = isVisible ? 'none' : 'block';
+        folderHeader.querySelector('span:last-child').textContent = isVisible ? '▼' : '▲';
+
+        if (!filesContainer.hasChildNodes() && !isVisible) {
+          if (folderPath === 'Preaching/Teaching Videos') {
+            const link = document.createElement('a');
+            link.href = 'https://docs.google.com/spreadsheets/d/1VMVFAiqVjoRrh6qb6aAAYBHlCj5TRGI8SAyAJP2zEb0/edit?usp=sharing';
+            link.target = '_blank';
+            link.textContent = 'Open Google Drive';
+            filesContainer.appendChild(link);
+          } else {
+            loadFiles(folderPath, filesContainer);
+          }
+        }
+      };
+
+      parentContainer.appendChild(folderDiv);
+    }
+
+    async function loadFiles(folderPath, container) {
+      container.innerHTML = 'Loading...';
+      const { data: items, error } = await supabase.storage.from(bucketName).list(folderPath);
+      container.innerHTML = '';
+
+      if (error) {
+        container.innerHTML = `<p style="color:red">${error.message}</p>`;
+        return;
+      }
+      if (!items.length) {
+        container.innerHTML = `<p>No files in this folder.</p>`;
+        return;
+      }
+
+      // 🔍 Toolbar
+      const toolbar = document.createElement('div');
+      toolbar.className = 'file-toolbar';
+      toolbar.innerHTML = `
+        <input type="text" placeholder="Search in ${folderPath}..." onkeyup="searchInTable(this, '${folderPath}')">
+        <select onchange="filterInTable(this, '${folderPath}')">
+          <option value="">All Types</option>
+          <option value="pdf">PDF</option>
+          <option value="pptx">PPTX</option>
+          <option value="word">Word</option>
+        </select>`;
+      container.appendChild(toolbar);
+
+      // 📋 File Table
+      const table = document.createElement('table');
+      table.className = 'file-table';
+      table.innerHTML = `
+        <thead>
+          <tr><th>Name</th><th>Date</th><th>Size</th><th>Action</th></tr>
+        </thead>
+        <tbody id="${folderPath}-files"></tbody>`;
+      container.appendChild(table);
+
+      const tbody = table.querySelector('tbody');
+
+      for (const item of items) {
+        if (item.type !== 'folder') {
+          const { data: urlData } = await supabase.storage
+            .from(bucketName)
+            .createSignedUrl(`${folderPath}/${item.name}`, 300);
+
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${item.name}</td>
+            <td>${new Date(item.created_at).toLocaleDateString()}</td>
+            <td>${(item.metadata?.size/1024).toFixed(1) || '-'} KB</td>
+            <td><a href="${urlData?.signedUrl}" target="_blank">Download</a></td>`;
+          tbody.appendChild(row);
+        }
+      }
+    }
+
+    // 🔍 Search filter
+    window.searchInTable = function(input, folder) {
+      const filter = input.value.toLowerCase();
+      const rows = document.querySelectorAll(`#${folder}-files tr`);
+      rows.forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+      });
+    };
+
+    // 🎯 File type filter
+    window.filterInTable = function(select, folder) {
+      const type = select.value;
+      const rows = document.querySelectorAll(`#${folder}-files tr`);
+      rows.forEach(row => {
+        row.style.display = (!type || row.textContent.endsWith(type)) ? '' : 'none';
+      });
+    };
+
+    // Hamburger menu toggle
+    function toggleMenu() {
+      document.getElementById("nav-links").classList.toggle("active");
+    }
+
+    window.siteLogin = siteLogin;
+  </script>
+
+</body>
+</html>
