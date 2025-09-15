@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    /* 🌿 GLOBAL STYLES */
     body {
       margin: 0;
       font-family: 'Roboto', sans-serif;
@@ -18,15 +17,8 @@
       flex-direction: column;
       min-height: 100vh;
       color: #222;
-      background-image: url('https://jfcmbinan.com/assets/images/logo-jfcm.png');
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: 300px;
-      background-attachment: fixed;
-      opacity: 0.97;
     }
 
-    /* ✨ HEADER */
     header {
       background: #004d00;
       color: white;
@@ -68,7 +60,6 @@
       color: white;
     }
 
-    /* ✨ MAIN CONTAINER */
     .container {
       flex: 1;
       display: flex;
@@ -84,9 +75,9 @@
       color: #004d00;
       margin-bottom: 20px;
       font-size: 1.8rem;
+      text-align: center;
     }
 
-    /* 📦 CARDS */
     .card {
       background: rgba(255,255,255,0.96);
       border-radius: 20px;
@@ -99,7 +90,7 @@
     }
 
     .card img.logo {
-      max-width: 100px;
+      max-width: 80px;
       margin-bottom: 15px;
     }
 
@@ -128,7 +119,7 @@
     }
 
     button:hover {
-      background: #004d00;
+      background: #006600;
     }
 
     .error {
@@ -136,7 +127,6 @@
       margin-top: 10px;
     }
 
-    /* 🌿 DRIVE AREA */
     #foldersContainer {
       display: flex;
       flex-direction: column;
@@ -153,9 +143,7 @@
     }
 
     .folder-header {
-      background: #004d00
-
-;
+      background: #004d00;
       color: white;
       font-weight: 600;
       padding: 15px;
@@ -163,19 +151,39 @@
       cursor: pointer;
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      transition: background 0.3s ease;
+    }
+
+    .folder-header:hover {
+      background: #006600;
+    }
+
+    .folder-header .chevron {
+      transition: transform 0.3s ease;
+    }
+
+    .folder-header.open .chevron {
+      transform: rotate(180deg);
     }
 
     .folder-content {
-      display: none;
-      padding: 15px;
-      background: rgba(255,255,255,0.95);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+      padding: 0 15px;
     }
 
-    /* 📋 File Toolbar (search + filter) */
+    .folder-content.open {
+      max-height: 1000px;
+      padding: 15px;
+    }
+
     .file-toolbar {
       display: flex;
       gap: 10px;
       margin-bottom: 10px;
+      flex-wrap: wrap;
     }
 
     .file-toolbar input, .file-toolbar select {
@@ -185,7 +193,6 @@
       flex: 1;
     }
 
-    /* 📂 File Table */
     .file-table {
       width: 100%;
       border-collapse: collapse;
@@ -204,35 +211,42 @@
       color: #004d00;
     }
 
-    /* Dashboard header */
-    .dashboard-header {
+    .file-card {
+      display: none;
+    }
+
+    /* Spinner */
+    .spinner-container {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      margin-bottom: 25px;
+      min-height: 80px;
     }
 
-    .welcome {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #004d00;
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #004d00;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      animation: spin 1s linear infinite;
     }
 
-    .datetime {
-      font-size: 0.9rem;
-      color: #555;
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
-    footer {
-      background: #004d00;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      font-size: 0.9rem;
-      margin-top: auto;
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
     }
 
-    /* ✨ MOBILE NAVIGATION */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
     @media (max-width: 768px) {
       nav {
         display: none;
@@ -255,12 +269,50 @@
       nav.active {
         display: flex;
       }
+
+      .file-table {
+        display: none;
+      }
+
+      .file-card {
+        display: block;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 10px;
+        background: #fff;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      }
+
+      .file-card strong {
+        color: #004d00;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .file-card small {
+        color: #555;
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .file-card a {
+        color: #004d00;
+        font-weight: 600;
+      }
+    }
+
+    footer {
+      background: #004d00;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 0.9rem;
+      margin-top: auto;
     }
   </style>
 </head>
 <body>
-
-  <!-- 🌿 HEADER -->
   <header>
     <a href="/" class="logo">JFCM Taytay</a>
     <nav id="nav-links">
@@ -271,13 +323,9 @@
     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
   </header>
 
-  <!-- 🌿 MAIN CONTENT -->
   <div class="container" id="main-container">
-    
-    <!-- LOGIN CARD -->
     <div class="card" id="login-box" style="max-width:420px; text-align:center;">
       <img src="https://jfcmbinan.com/assets/images/logo-jfcm.png" class="logo" alt="JFCM Logo">
-
       <h2>Welcome to JFCM Taytay</h2>
       <input type="email" id="email" placeholder="Enter Email">
       <input type="password" id="password" placeholder="Enter Password">
@@ -285,33 +333,33 @@
       <p class="error" id="error-message"></p>
     </div>
 
-    <!-- DRIVE DASHBOARD -->
     <div class="card" id="drive-box" style="display:none;">
-      <div class="dashboard-header">
+      <div class="dashboard-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
         <div class="welcome" id="welcomeMsg">Welcome!</div>
         <div class="datetime" id="datetime"></div>
       </div>
       <h2>JFCM Taytay Mini Kitchen Modules</h2>
       <div id="foldersContainer"></div>
     </div>
-
   </div>
 
-  <!-- 🌿 FOOTER -->
   <footer>
     © 2025 Jesus First Christian Ministries - Taytay | All Rights Reserved
   </footer>
 
-  <!-- 🌿 SCRIPT -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
     const supabaseUrl = 'https://ustqtzorwudvspqhqsda.supabase.co';
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzdHF0em9yd3VkdnNwcWhxc2RhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mjc1NjUsImV4cCI6MjA3MzAwMzU2NX0.6xDg0MoJDhS_Gtg1TZ-xZ47Ws5nWnqUHEnqTfiAvkVA'; // 🔑 Your Supabase anon key here
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzdHF0em9yd3VkdnNwcWhxc2RhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mjc1NjUsImV4cCI6MjA3MzAwMzU2NX0.6xDg0MoJDhS_Gtg1TZ-xZ47Ws5nWnqUHEnqTfiAvkVA'; 
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const bucketName = 'private';
     const foldersToShow = ['Preaching', 'Simbahay', 'Sow', 'Preaching/Teaching Videos'];
+
+    function sanitizeForId(name) {
+      return name.replace(/[^a-z0-9\-_]/gi, "_");
+    }
 
     async function siteLogin() {
       const email = document.getElementById('email').value;
@@ -325,7 +373,7 @@
 
       document.getElementById('login-box').style.display = 'none';
       document.getElementById('drive-box').style.display = 'block';
-      document.getElementById('welcomeMsg').textContent = `Welcome, ${user.email}`;
+      document.getElementById('welcomeMsg').textContent = `Welcome, ${user.email} 👋`;
 
       updateDateTime();
       setInterval(updateDateTime, 1000);
@@ -352,7 +400,7 @@
 
       const folderHeader = document.createElement('div');
       folderHeader.className = 'folder-header';
-      folderHeader.innerHTML = `<span>📁 ${folderPath}</span><span>▼</span>`;
+      folderHeader.innerHTML = `<span>📁 ${folderPath}</span><span class="chevron">▼</span>`;
       folderDiv.appendChild(folderHeader);
 
       const filesContainer = document.createElement('div');
@@ -360,19 +408,24 @@
       folderDiv.appendChild(filesContainer);
 
       folderHeader.onclick = () => {
-        const isVisible = filesContainer.style.display === 'block';
-        filesContainer.style.display = isVisible ? 'none' : 'block';
-        folderHeader.querySelector('span:last-child').textContent = isVisible ? '▼' : '▲';
+        const isOpen = filesContainer.classList.contains('open');
+        if (isOpen) {
+          filesContainer.classList.remove('open');
+          folderHeader.classList.remove('open');
+        } else {
+          filesContainer.classList.add('open');
+          folderHeader.classList.add('open');
 
-        if (!filesContainer.hasChildNodes() && !isVisible) {
-          if (folderPath === 'Preaching/Teaching Videos') {
-            const link = document.createElement('a');
-            link.href = 'https://docs.google.com/spreadsheets/d/1VMVFAiqVjoRrh6qb6aAAYBHlCj5TRGI8SAyAJP2zEb0/edit?usp=sharing';
-            link.target = '_blank';
-            link.textContent = 'Open Google Drive';
-            filesContainer.appendChild(link);
-          } else {
-            loadFiles(folderPath, filesContainer);
+          if (!filesContainer.hasChildNodes()) {
+            if (folderPath === 'Preaching/Teaching Videos') {
+              const link = document.createElement('a');
+              link.href = 'https://docs.google.com/spreadsheets/d/1VMVFAiqVjoRrh6qb6aAAYBHlCj5TRGI8SAyAJP2zEb0/edit?usp=sharing';
+              link.target = '_blank';
+              link.textContent = 'Open Google Drive';
+              filesContainer.appendChild(link);
+            } else {
+              loadFiles(folderPath, filesContainer);
+            }
           }
         }
       };
@@ -381,7 +434,11 @@
     }
 
     async function loadFiles(folderPath, container) {
-      container.innerHTML = 'Loading...';
+      container.innerHTML = `
+        <div class="spinner-container">
+          <div class="spinner"></div>
+        </div>`;
+
       const { data: items, error } = await supabase.storage.from(bucketName).list(folderPath);
       container.innerHTML = '';
 
@@ -394,7 +451,12 @@
         return;
       }
 
-      // 🔍 Toolbar
+      const fadeWrapper = document.createElement("div");
+      fadeWrapper.className = "fade-in";
+      container.appendChild(fadeWrapper);
+
+      const safeFolder = sanitizeForId(folderPath);
+
       const toolbar = document.createElement('div');
       toolbar.className = 'file-toolbar';
       toolbar.innerHTML = `
@@ -403,19 +465,18 @@
           <option value="">All Types</option>
           <option value="pdf">PDF</option>
           <option value="pptx">PPTX</option>
-          <option value="word">Word</option>
+          <option value="docx">Word</option>
         </select>`;
-      container.appendChild(toolbar);
+      fadeWrapper.appendChild(toolbar);
 
-      // 📋 File Table
       const table = document.createElement('table');
       table.className = 'file-table';
       table.innerHTML = `
         <thead>
           <tr><th>Name</th><th>Date</th><th>Size</th><th>Action</th></tr>
         </thead>
-        <tbody id="${folderPath}-files"></tbody>`;
-      container.appendChild(table);
+        <tbody id="${safeFolder}-files"></tbody>`;
+      fadeWrapper.appendChild(table);
 
       const tbody = table.querySelector('tbody');
 
@@ -423,7 +484,7 @@
         if (item.type !== 'folder') {
           const { data: urlData } = await supabase.storage
             .from(bucketName)
-            .createSignedUrl(`${folderPath}/${item.name}`, 300);
+            .createSignedUrl(`${folderPath}/${item.name}`, 1800);
 
           const row = document.createElement('tr');
           row.innerHTML = `
@@ -432,36 +493,76 @@
             <td>${(item.metadata?.size/1024).toFixed(1) || '-'} KB</td>
             <td><a href="${urlData?.signedUrl}" target="_blank">Download</a></td>`;
           tbody.appendChild(row);
+
+          const card = document.createElement('div');
+          card.className = 'file-card';
+          card.setAttribute("data-folder", safeFolder);
+          card.setAttribute("data-name", item.name.toLowerCase());
+          card.innerHTML = `
+            <strong>${item.name}</strong>
+            <small>Date: ${new Date(item.created_at).toLocaleDateString()}</small>
+            <small>Size: ${(item.metadata?.size/1024).toFixed(1) || '-'} KB</small>
+            <a href="${urlData?.signedUrl}" target="_blank">Download</a>
+          `;
+          fadeWrapper.appendChild(card);
         }
       }
     }
 
-    // 🔍 Search filter
     window.searchInTable = function(input, folder) {
+      const safeFolder = sanitizeForId(folder);
       const filter = input.value.toLowerCase();
-      const rows = document.querySelectorAll(`#${folder}-files tr`);
+
+      const rows = document.querySelectorAll(`#${safeFolder}-files tr`);
       rows.forEach(row => {
-        row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+        row.style.display = row.textContent.toLowerCase().includes(filter) ? "" : "none";
+      });
+
+      const cards = document.querySelectorAll(`.file-card[data-folder="${safeFolder}"]`);
+      cards.forEach(card => {
+        card.style.display = card.textContent.toLowerCase().includes(filter) ? "" : "none";
       });
     };
 
-    // 🎯 File type filter
     window.filterInTable = function(select, folder) {
-      const type = select.value;
-      const rows = document.querySelectorAll(`#${folder}-files tr`);
+      const safeFolder = sanitizeForId(folder);
+      const type = select.value.toLowerCase();
+
+      const rows = document.querySelectorAll(`#${safeFolder}-files tr`);
+      const cards = document.querySelectorAll(`.file-card[data-folder="${safeFolder}"]`);
+
+      let visible = 0;
+
       rows.forEach(row => {
-        row.style.display = (!type || row.textContent.endsWith(type)) ? '' : 'none';
+        const fileName = row.querySelector("td:first-child")?.textContent.toLowerCase() || "";
+        const match = (!type || fileName.endsWith(`.${type}`));
+        row.style.display = match ? "" : "none";
+        if (match) visible++;
       });
+
+      cards.forEach(card => {
+        const fileName = card.getAttribute("data-name") || "";
+        const match = (!type || fileName.endsWith(`.${type}`));
+        card.style.display = match ? "" : "none";
+        if (match) visible++;
+      });
+
+      const parent = select.closest('.file-toolbar').parentElement;
+      parent.querySelectorAll(".no-results").forEach(e => e.remove());
+      if (visible === 0) {
+        const msg = document.createElement("p");
+        msg.className = "no-results";
+        msg.style.color = "red";
+        msg.textContent = "No results found.";
+        parent.appendChild(msg);
+      }
     };
 
-    // Hamburger menu toggle
     function toggleMenu() {
       document.getElementById("nav-links").classList.toggle("active");
     }
 
     window.siteLogin = siteLogin;
   </script>
-
 </body>
 </html>
-
